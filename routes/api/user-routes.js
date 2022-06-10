@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { route } = require('express/lib/application');
-const { User } = require('../../models');
+const { User, Post } = require('../../models');
 
 
 
@@ -8,7 +8,11 @@ const { User } = require('../../models');
 router.get('/', (req, res) => {
     // Access our User model and run .findAll() method
     User.findAll({
-        attributes: { exclude: ['password'] }
+        attributes: { exclude: ['password'] },
+        include: {
+            model: Post,
+            attributes: ['id', 'title', 'post_url', 'created_at']
+        }
     })
         .then(dbUserData => res.json(dbUserData))
         .catch(err => {
@@ -24,6 +28,10 @@ router.get('/:id', (req, res) => {
     User.findOne({
         where: {
             id: req.params.id
+        },
+        include: {
+            model: Post,
+            attributes: ['id', 'title', 'post_url', 'created_at']
         }
     })
         .then(dbUserData => {
