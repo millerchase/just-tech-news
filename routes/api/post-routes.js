@@ -92,6 +92,17 @@ router.post("/", (req, res) => {
     });
 });
 
+// UPDATE /api/posts/upvote - add vote to post
+router.put("/upvote", (req, res) => {
+  // custom static method created in models/Post.js
+  Post.upvote(req.body, { Vote })
+    .then((updatedPostData) => res.json(updatedPostData))
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json(err);
+    });
+});
+
 // UPDATE /api/posts/? - update post via id
 router.put("/:id", (req, res) => {
   Post.update(
@@ -136,16 +147,6 @@ router.delete("/:id", (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
-});
-
-// UPDATE /api/posts/upvote - add vote to post
-router.put("/upvote", (req, res) => {
-  Vote.create({
-    user_id: req.body.user_id,
-    post_id: req.body.post_id,
-  })
-    .then((dbPostData) => res.json(dbPostData))
-    .catch((err) => res.json(err));
 });
 
 module.exports = router;
