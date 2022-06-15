@@ -2,7 +2,7 @@
 const router = require('express').Router();
 
 // connect to models
-const { Post, User, Vote } = require('../../models').default;
+const { Post, User, Vote, Comment } = require('../../models');
 
 // setup connection to database
 const sequelize = require('../../config/connection');
@@ -29,6 +29,14 @@ router.get('/', (req, res) => {
       {
         model: User,
         attributes: ['username']
+      },
+      {
+        model: Comment,
+        attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+        include: {
+          model: User,
+          attributes: ['username']
+        }
       }
     ]
   })
@@ -61,6 +69,14 @@ router.get('/:id', (req, res) => {
       {
         model: User,
         attributes: ['username']
+      },
+      {
+        model: Comment,
+        attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+        include: {
+          model: User,
+          attributes: ['username']
+        }
       }
     ]
   })

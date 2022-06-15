@@ -8,14 +8,14 @@ Comment.init(
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      autoIncrement: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     comment_text: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: 1
+        len: [1]
       }
     },
     user_id: {
