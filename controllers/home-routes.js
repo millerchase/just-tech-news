@@ -93,7 +93,6 @@ router.get('/post/:id', (req, res) => {
 
         return;
       }
-
       // serialize the data
       const post = dbPostData.get({ plain: true });
 
