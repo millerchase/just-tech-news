@@ -7,6 +7,9 @@ const { Post, User, Vote, Comment } = require('../../models');
 // setup connection to database
 const sequelize = require('../../config/connection');
 
+// import login auth from utils
+const withAuth = require('../../utils/auth');
+
 // GET /api/posts/ - get all users
 router.get('/', (req, res) => {
   console.log('=======================');
@@ -60,7 +63,7 @@ router.get('/:id', (req, res) => {
       'created_at',
       [
         sequelize.literal(
-          '(SELECT COUNT(*) FROM vote WHERE post.id =vote.post_id)'
+          '(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'
         ),
         'vote_count'
       ]
@@ -94,12 +97,12 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// POST /api/posts/ - post to posts
-router.post('/', (req, res) => {
+// POST /api/posts/ - add a post
+router.post('/', withAuth, (req, res) => {
   Post.create({
     title: req.body.title,
     post_url: req.body.post_url,
-    user_id: req.body.user_id
+    user_id: req.session.user_id
   })
     .then(dbPostData => res.json(dbPostData))
     .catch(err => {
@@ -109,7 +112,7 @@ router.post('/', (req, res) => {
 });
 
 // UPDATE /api/posts/upvote - add vote to post
-router.put('/upvote', (req, res) => {
+router.put('/upvote', withAuth, (req, res) => {
   // make sure the session exists first
   if (req.session) {
     // pass session id along with all destructed properties on req.body
@@ -128,7 +131,7 @@ router.put('/upvote', (req, res) => {
 });
 
 // UPDATE /api/posts/? - update post via id
-router.put('/:id', (req, res) => {
+router.put('/:id', withAuth, (req, res) => {
   Post.update(
     {
       title: req.body.title
@@ -154,7 +157,7 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /api/posts/? - delete a post
-router.delete('/:id', (req, res) => {
+router.delete('/:id', withAuth, (req, res) => {
   Post.destroy({
     where: {
       id: req.params.id
