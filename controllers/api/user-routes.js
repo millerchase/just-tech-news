@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const { response } = require('express');
 const { User, Post, Vote, Comment } = require('../../models');
 
 // GET /api/users
@@ -14,10 +13,8 @@ router.get('/', (req, res) => {
   })
     .then(dbUserData => res.json(dbUserData))
     .catch(err => {
-      console.log(err => {
-        console.log(err);
-        res.status(500).json(err);
-      });
+      console.log(err);
+      res.status(500).json(err);
     });
 });
 
